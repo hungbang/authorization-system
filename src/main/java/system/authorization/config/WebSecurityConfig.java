@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import system.authorization.service.CustomUserDetailService;
 
@@ -19,10 +18,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailService customUserDetailService;
 
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.userDetailsService(customUserDetailService);
+        auth
+                .userDetailsService(customUserDetailService);
     }
 
     @Override
@@ -33,16 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/oauth/token").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/api/public/**").permitAll()
+                .antMatchers("/home/test").permitAll()
+                .anyRequest().authenticated()
+                .and().csrf().disable();
     }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**");
-    }
-
 
 }

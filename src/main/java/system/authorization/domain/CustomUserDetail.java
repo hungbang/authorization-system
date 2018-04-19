@@ -28,7 +28,7 @@ public class CustomUserDetail implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("USER");
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_CLIENT");
         return Arrays.asList(simpleGrantedAuthority);
     }
 
@@ -44,21 +44,21 @@ public class CustomUserDetail implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return user.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return user.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return user.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return user.isEnabled();
     }
 }
