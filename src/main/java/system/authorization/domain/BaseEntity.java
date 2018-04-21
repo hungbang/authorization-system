@@ -4,22 +4,19 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by KAI on 4/19/18.
  */
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+//@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-    @CreatedBy
     private Date createdAt;
 
-    @LastModifiedBy
     private Date lastUpdatedAt;
 
     @Version
@@ -49,4 +46,14 @@ public abstract class BaseEntity {
         this.version = version;
     }
 
+    @PrePersist
+    public void onPrePersist() {
+        this.createdAt = Calendar.getInstance().getTime();
+        this.lastUpdatedAt = Calendar.getInstance().getTime();
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        this.lastUpdatedAt = Calendar.getInstance().getTime();
+    }
 }
