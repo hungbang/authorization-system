@@ -1,9 +1,12 @@
 package system.authorization.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import system.authorization.domain.User;
+import system.authorization.exception.UsernameIsExistingException;
+import system.authorization.model.WrapperUserResponse;
 import system.authorization.request.RegistrationRequest;
 import system.authorization.service.UserService;
 
@@ -20,9 +23,9 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/users")
-    public ResponseEntity createUser(@RequestBody @Valid RegistrationRequest registrationRequest){
+    public ResponseEntity createUser(@RequestBody @Valid RegistrationRequest registrationRequest) throws UsernameIsExistingException {
         User user = userService.registerUser(registrationRequest);
-        return ResponseEntity.ok(user.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new WrapperUserResponse(user));
     }
 
 }

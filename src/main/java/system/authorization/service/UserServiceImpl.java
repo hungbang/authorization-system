@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import system.authorization.domain.User;
+import system.authorization.exception.UsernameIsExistingException;
 import system.authorization.repository.UserRepository;
 import system.authorization.request.RegistrationRequest;
 
@@ -36,13 +37,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User registerUser(@Valid RegistrationRequest registrationRequest) {
+    public User registerUser(@Valid RegistrationRequest registrationRequest) throws UsernameIsExistingException {
+        User userOptional =  userRepository.findByUsername(registrationRequest.getEmail());
+        if(Objects.nonNull(userOptional))
+            throw new UsernameIsExistingException("Username is existing.");
         return this.saveUser(this.createUser(registrationRequest));
     }
 
     private User saveUser(User user) {
         user.setId(UUID.randomUUID().toString());
-        return userRepository.save(user);
+        return userRepository.saveAndFlush(user);
     }
 
 

@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "auth_user")
-@EntityListeners(AuditingEntityListener.class)
 public class User extends BaseEntity{
 
     @Id
